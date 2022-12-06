@@ -1,6 +1,6 @@
 import express from 'express'
 import {createServer} from 'http'
-import {WebSocketServer} from 'ws'
+import {WebSocket, WebSocketServer} from 'ws'
 
 const app = express()
 
@@ -8,24 +8,39 @@ const server = createServer(app)
 
 const wss = new WebSocketServer({server})
 
-wss.on('connection', socket => {
-    socket.on('message', message => {
+wss.on('connection', (ws: WebSocket & {isAlive?: boolean}) => {
+
+    ws.isAlive = true
+
+    ws.on('pong', () => {
+        ws.isAlive = true
+    })
+
+    ws.on('message', message => {
         let messageString = message.toString('utf-8')
         console.log(`received: ${message}`)
         const broadcastRegex = /^broadcast:/
         if (broadcastRegex.test(messageString)) {
             messageString = messageString.replace(broadcastRegex, '')
             wss.clients.forEach(client => {
-                if (client !== socket) {
+                if (client !== ws) {
                     client.send(`Hello, broadcast message -> ${messageString}`)
                 }
             })
         } else {
-            socket.send(`Hello you sent -> ${messageString}`)
+            ws.send(`Hello you sent -> ${messageString}`)
         }
     })
-    socket.send('Hi, I am web socket server!')
+    ws.send('Hi, I am web ws server!')
 })
+
+setInterval(() => {
+    wss.clients.forEach((ws: WebSocket & {isAlive?: boolean}) => {
+        if (!ws.isAlive) return ws.terminate()
+        ws.isAlive = false
+        ws.ping(null, false)
+    })
+}, 10000)
 
 server.listen(8999, () => {
     // @ts-ignore
