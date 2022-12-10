@@ -10,15 +10,16 @@ const emitter = new EventEmitter()
 app.use(cors())
 app.use(express.json())
 
-app.get('get-message', (req, res) => {
+app.get('/get-messages', (req, res) => {
     emitter.once('newMessage', message => {
-        res.json(message)
+        res.json({...message})
     })
 })
 
-app.post('new-messages', (req, res) => {
-    const {message} = req.body
-    emitter.emit('newMessage', message)
+app.post('/new-message', (req, res) => {
+    console.log(req.body)
+    const {message, id} = req.body
+    emitter.emit('newMessage', {message, id})
     res.status(200)
 })
 
