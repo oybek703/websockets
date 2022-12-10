@@ -24,12 +24,10 @@ wss.on('connection', (socket, request) => {
         const parsedData: ISocketMessage = JSON.parse(data.toString())
         switch (parsedData.event) {
             case 'connection':
-                console.log(parsedData)
                 broadcastMessage(parsedData, parsedData.id)
                 break
             default:
                 broadcastMessage(parsedData, parsedData.id)
-                console.log(parsedData)
                 break
         }
     })

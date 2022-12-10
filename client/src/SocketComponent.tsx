@@ -19,7 +19,18 @@ const SocketComponent = () => {
             socket.current?.send(JSON.stringify(message))
         }
         socket.current.onmessage = function (event) {
-            setMessages(prevState => [...prevState, JSON.parse(event.data)])
+            const {event: eventName} = JSON.parse(event.data)
+            console.log(JSON.parse(event.data))
+            if (!eventName) {
+                setMessages(prevState => [...prevState, JSON.parse(event.data)])
+            }
+        }
+        socket.current.onclose = function () {
+            console.log('Socket closed!')
+        }
+
+        socket.current.onerror = function () {
+            console.error('Socket connection error!')
         }
 
     }
@@ -59,6 +70,7 @@ const SocketComponent = () => {
                     type="text" className="form-control"/>
                 <button className="btn btn-success mt-2">Send</button>
             </form>
+            <li className="list-group-item p-1 text-center">{username} connected!</li>
             <ul className="list-group">
                 {messages.map(({message, id}) => <li key={id} className="list-group-item">{message}</li>)}
             </ul>
