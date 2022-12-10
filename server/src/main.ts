@@ -1,31 +1,46 @@
 import 'colors'
 import cors from 'cors'
 import express from 'express'
-import {EventEmitter} from 'events'
+import {Server} from 'ws'
+import {createServer} from 'http'
 
 const app = express()
 
-const emitter = new EventEmitter()
+const server = createServer(app)
 
 app.use(cors())
 app.use(express.json())
 
-app.get('/connect', (req, res) => {
-    res.writeHead(200, {
-        'Connection': 'keep-alive',
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache'
-    })
-    emitter.on('newMessage', message => {
-        res.write(`data: ${JSON.stringify(message)} \n\n`)
+interface ISocketMessage {
+    event: string
+    id: number
+    username: string
+}
+
+const wss = new Server({server})
+
+wss.on('connection', (socket, request) => {
+    socket.on('message', (data, isBinary) => {
+        const parsedData: ISocketMessage = JSON.parse(data.toString())
+        switch (parsedData.event) {
+            case 'connection':
+                console.log(parsedData)
+                broadcastMessage(parsedData, parsedData.id)
+                break
+            default:
+                broadcastMessage(parsedData, parsedData.id)
+                console.log(parsedData)
+                break
+        }
     })
 })
 
-app.post('/new-message', (req, res) => {
-    const {message, id} = req.body
-    emitter.emit('newMessage', {message, id})
-    res.status(200)
-})
+function broadcastMessage(message: ISocketMessage, id: number) {
+    wss.clients.forEach(client => {
+        client.send(JSON.stringify(message))
+    })
+}
 
 const PORT = 5000
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}...`.blue.underline))
+server.listen(PORT, () => console.log(`Server is running on port ${PORT}...`.blue.underline))
+
