@@ -1,3 +1,61 @@
-.idea
-node_modules
-dist
+.id
+
+# compiled output
+chat-api/dist
+chat-api/node_modules
+
+# Logs
+chat-api/logs
+chat-api/*.log
+chat-api/npm-debug.log*
+chat-api/pnpm-debug.log*
+chat-api/yarn-debug.log*
+chat-api/yarn-error.log*
+chat-api/lerna-debug.log*
+
+# OS
+chat-api/.DS_Store
+
+# Tests
+chat-api/coverage
+chat-api/.nyc_output
+
+# IDEs and editors
+chat-api/.idea
+chat-api/.project
+chat-api/.classpath
+chat-api/.c9/
+chat-api/*.launch
+chat-api/.settings/
+chat-api/*.sublime-workspace
+
+# IDE - VSCode
+chat-api/.vscode/*
+chat-api/!.vscode/settings.json
+chat-api/!.vscode/tasks.json
+chat-api/!.vscode/launch.json
+chat-api/!.vscode/extensions.json
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+chat-client/node_modules
+chat-client/.pnp
+chat-client/.pnp.js
+
+# testing
+chat-client/coverage
+
+# production
+chat-client/build
+
+# misc
+chat-client/.DS_Store
+chat-client/.env.local
+chat-client/.env.development.local
+chat-client/.env.test.local
+chat-client/.env.production.local
+
+chat-client/npm-debug.log*
+chat-client/yarn-debug.log*
+chat-client/yarn-error.log*
