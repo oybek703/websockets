@@ -74,6 +74,13 @@
   const form = document.getElementById('form')
   const input = document.getElementById('input')
 
+  function appendMessage(message, sender = username) {
+    const item = document.createElement('li')
+    item.textContent = `${sender} => ${message}`
+    messages.appendChild(item)
+    window.scrollTo(0, document.body.scrollHeight)
+  }
+
   form.addEventListener('submit', function(event) {
     event.preventDefault()
     if (!username) {
@@ -81,6 +88,7 @@
     }
     if (input.value) {
       socket.emit('new-message', {message: input.value, username})
+      appendMessage(input.value)
       input.value = ''
     }
   })
@@ -90,10 +98,7 @@
   })
 
   socket.on('new-message', function({message, username}) {
-    const item = document.createElement('li')
-    item.textContent = `${username} => ${message}`
-    messages.appendChild(item)
-    window.scrollTo(0, document.body.scrollHeight)
+    appendMessage(message, username)
   })
 </script>
 </body>

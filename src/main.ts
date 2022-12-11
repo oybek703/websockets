@@ -11,7 +11,7 @@ const io = new Server(server)
 io.on('connection', function (socket) {
     socket.broadcast.emit('new-user-joined',`New user joined at ${new Date().toLocaleTimeString()}.`)
     socket.on('new-message', function (message) {
-        io.emit('new-message', message)
+        socket.broadcast.emit('new-message', message)
     })
     socket.on('disconnect', function (reason) {
         console.group()
