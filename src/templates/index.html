@@ -67,6 +67,7 @@
 </form>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+  let username
   const socket = io()
 
   const messages = document.getElementById('messages')
@@ -75,8 +76,11 @@
 
   form.addEventListener('submit', function(event) {
     event.preventDefault()
+    if (!username) {
+      username = prompt('Enter username')
+    }
     if (input.value) {
-      socket.emit('new-message', input.value)
+      socket.emit('new-message', {message: input.value, username})
       input.value = ''
     }
   })
@@ -85,9 +89,9 @@
     alert(message)
   })
 
-  socket.on('new-message', function(message) {
+  socket.on('new-message', function({message, username}) {
     const item = document.createElement('li')
-    item.textContent = message
+    item.textContent = `${username} => ${message}`
     messages.appendChild(item)
     window.scrollTo(0, document.body.scrollHeight)
   })
