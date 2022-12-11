@@ -9,7 +9,7 @@ const server = createServer(app)
 const io = new Server(server)
 
 io.on('connection', function (socket) {
-    console.log('user connected')
+    socket.broadcast.emit('new-user-joined',`New user joined at ${new Date().toLocaleTimeString()}.`)
     socket.on('new-message', function (message) {
         io.emit('new-message', message)
     })

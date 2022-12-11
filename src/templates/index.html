@@ -10,7 +10,7 @@
         }
 
         #form {
-            background: rgba(0, 0, 0, 0.15);
+            background: #6E2A2AFF;
             padding: 0.25rem;
             position: fixed;
             bottom: 0;
@@ -35,13 +35,13 @@
         }
 
         #form > button {
-            background: #333;
+            background: #cccccc;
             border: none;
             padding: 0 1rem;
             margin: 0.25rem;
             border-radius: 3px;
             outline: none;
-            color: #fff;
+            color: #000;
         }
 
         #messages {
@@ -79,6 +79,10 @@
       socket.emit('new-message', input.value)
       input.value = ''
     }
+  })
+
+  socket.on('new-user-joined', function(message) {
+    alert(message)
   })
 
   socket.on('new-message', function(message) {
